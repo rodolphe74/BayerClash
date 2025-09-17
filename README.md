@@ -3,12 +3,13 @@ Conversion C du plugin LUA https://github.com/Samuel-DEVULDER/UToPiC/blob/master
 
 <img src="result/original.png" width=320>&nbsp;<img src="result/output_mo5.png" width=320>
 
-Puis experimentation sur une palette spécifique MO6 avec des couleurs non regulièrement espacées.
 
-Sans contraintes:
+Puis experimentation de tramage avec une palette de 16 couleurs non regulierement espacées.
+
+Sans contraintes en rgb :
 
 <img src="result/output_tetra.png" width=320>
 
-Avec contraintes de 2 couleurs max par bloc horizontal de 8 pixels:
+Avec les contraintes MO6 de 2 couleurs max par bloc horizontal de 8 pixels sur une palette de 4096 couleurs:
 
 <img src="result/output_mo6.png" width=320>
