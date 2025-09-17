@@ -8,4 +8,5 @@ Puis experimentation sur une palette spécifique MO6 avec des couleurs non regul
 Sans contraintes:
 
 Avec contraintes de 2 couleurs max par bloc horizontal de 8 pixels:
+
 <img src="result/output_mo6.png" width=320>
