@@ -46,10 +46,9 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	// unsigned char *linearized_image = linearizeImage(original_image, width, height);
-	// stbi_write_png("linearized.png", width, height, COLOR_COMP,
-	// 			   linearized_image, width * COLOR_COMP);
-	// free(original_image);
+	unsigned char *linearized_image = linearizeImage(original_image, width, height);
+	stbi_write_png("linearized.png", width, height, COLOR_COMP,
+				   linearized_image, width * COLOR_COMP);
 
 	unsigned char *output_image = malloc(THOMSON_SCREEN_W * THOMSON_SCREEN_H * COLOR_COMP * sizeof(unsigned char));
 
@@ -77,7 +76,7 @@ int main(int argc, char *argv[])
 			int i = 0;
 			for (int z = x; z <= x + 7; z++) {
 				float d = bayer_matrix_8x8[y % 8][z % 8];
-				Color p = color_add(get_average_pixel(original_image, width, height, z, y), err1[z + 1]);
+				Color p = color_add(get_average_pixel(linearized_image, width, height, z, y), err1[z + 1]);
 				int c = ((p.r > d) ? 1 : 0) + ((p.g > d) ? 2 : 0) + ((p.b > d) ? 4 : 0);
 				int val = get_or_default(histo, c, 0);
 				val++;
@@ -132,7 +131,7 @@ int main(int argc, char *argv[])
 										: couple.c2;
 							Color e = color_mul(
 								color_sub(fromColorPalette(mo5_palette[qk]), fromColorPalette(mo5_palette[p])), COEF);
-							Color z = color_add(get_average_pixel(original_image, width, height, x + k, y + 1), e);
+							Color z = color_add(get_average_pixel(linearized_image, width, height, x + k, y + 1), e);
 							d += clamp_deviation(z.r) + clamp_deviation(z.g) + clamp_deviation(z.b);
 						}
 						if (d <= dm) {
@@ -168,7 +167,7 @@ int main(int argc, char *argv[])
 				   THOMSON_SCREEN_W * COLOR_COMP);
 
 	free(original_image);
-	// free(linearized_image);
+	free(linearized_image);
 	free(output_image);
 
 	return 0;
