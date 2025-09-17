@@ -88,7 +88,8 @@ void dither_image(const float *input, const int image_width, const int image_hei
 
 int main(int argc, char *argv[])
 {
-	char filename[] = "/Users/rodoc/develop/BayerClash/samples/original.png";
+	// char filename[] = "/Users/rodoc/develop/BayerClash/samples/original.png";
+	char *filename = argv[1];
 	int width, height, channels;
 	unsigned char *original_image = stbi_load(filename, &width, &height, &channels, COLOR_COMP);
 	if (!original_image) {
@@ -123,7 +124,7 @@ int main(int argc, char *argv[])
 	convert_indexed_to_rgba((unsigned char *)output_image_indexed, width, height, palette, PALETTE_SIZE,
 							(unsigned char *)output_image);
 
-	stbi_write_png("output_indexed.png", width, height, COLOR_COMP,
+	stbi_write_png("output_tetra.png", width, height, COLOR_COMP,
 				   output_image, width * COLOR_COMP);
 
 	free(original_image);

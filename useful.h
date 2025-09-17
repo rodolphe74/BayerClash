@@ -44,6 +44,7 @@ void convert_indexed_to_rgba(const unsigned char *input, const int image_width, 
 							 const unsigned char *palette, const int palette_size, unsigned char *output);
 void output_palette(const float *palette, const int palette_size, const char *filename);
 Color get_pixel(unsigned char *image, int width, int x, int y, int comps);
+Color getPictureColor(const unsigned char *image, int width, int height, int i, int j);
 Color get_average_pixel(const unsigned char *image, int width, int height, int x, int y);
 float linearize(float val);
 unsigned char *linearizeImage(unsigned char *image, int width, int height);
@@ -55,5 +56,8 @@ void free_best_couples_map();
 Couple find_two_most_frequent(const map *histo);
 void pset(unsigned char *image, int x, int y, ColorPalette *palette, int color_index, int width, int height);
 void reduce_exoquant_palette_to_mo6(const unsigned char *input_palette, ColorPalette *output_palette, int input_size);
-
+unsigned char *resize_if_necessary(const unsigned char *inputImage, const int ix, const int iy,
+								   unsigned char *resizedImage, int *ox, int *oy);
+unsigned char *frame_into_thomson_res(const unsigned char *inputData, int ix, int iy, unsigned char *outputData, int *ox,
+								 int *oy);
 #endif

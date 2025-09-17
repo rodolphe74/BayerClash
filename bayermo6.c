@@ -68,7 +68,7 @@ void sort_by_luminance(int *candidates, float *weights, const float *palette)
 
 int main(int argc, char *argv[])
 {
-	// char filename[] = "/Users/rodoc/develop/BayerClash/samples/original.png";
+	// char filename[] = "/Users/rodoc/develop/BayerClash/samples/bw.png";
 	char *filename = argv[1];
 	int width, height, channels;
 	unsigned char *original_image = stbi_load(filename, &width, &height, &channels, COLOR_COMP);
@@ -80,7 +80,6 @@ int main(int argc, char *argv[])
 	unsigned char *linearized_image = linearizeImage(original_image, width, height);
 	stbi_write_png("linearized.png", width, height, COLOR_COMP,
 				   linearized_image, width * COLOR_COMP);
-	// free(original_image);
 
 	unsigned char *output_image = malloc(THOMSON_SCREEN_W * THOMSON_SCREEN_H * COLOR_COMP * sizeof(unsigned char));
 
@@ -133,6 +132,7 @@ int main(int argc, char *argv[])
 	
 	// Triangulation de la palette
 	Tetrapal *tetrapal = tetrapal_new(float_mo6_palette, PALETTE_SIZE);
+	unsigned char *output_tetra_indexed = malloc(width * height * sizeof(char));
 
 	for (int y = 0; y < THOMSON_SCREEN_H; y++) {
 
@@ -153,15 +153,16 @@ int main(int argc, char *argv[])
 				pixel[2] = p.b;
 				tetrapal_interpolate(tetrapal, pixel, candidates, weights);
 				sort_by_luminance(candidates, weights, float_mo6_palette);
-				// const double threshold = bayer_matrix_4x4[y % 4][z % 4];
-				const double threshold = bayer_matrix_8x8[y % 8][z % 8];
+				const double threshold = bayer_matrix_4x4[y % 4][z % 4];
+				int image_index = y * width + z;
+				// const double threshold = bayer_matrix_8x8[y % 8][z % 8];
 				double sum = 0.0;
 				int c = 0;
 				for (int i = 0; i < 4; i++) {
 					sum += weights[i];
-
 					if (threshold < sum) {
 						c  = candidates[i];
+						output_tetra_indexed[image_index] = candidates[i];
 						break;
 					}
 				}
@@ -195,11 +196,13 @@ int main(int argc, char *argv[])
 			} else {
 				// Plus de 2 couleurs
 
+				// cas simple on prend les 2 couleurs les plus frequentes
 				Couple two_most = find_two_most_frequent(&histo);
 				c1 = two_most.c1;
 				c2 = two_most.c2;
 
 
+				// cas meilleur couples
 				// list best_couples;
 				// best_couples = list_init(sizeof(Couple));
 				// find_best_couple(&histo, mo6_palette, PALETTE_SIZE, &best_couples);
@@ -257,8 +260,13 @@ int main(int argc, char *argv[])
 	map_destroy(histo);
 	free_best_couples_map();
 	tetrapal_free(tetrapal);
-	stbi_write_png("output.png", THOMSON_SCREEN_W, THOMSON_SCREEN_H, COLOR_COMP, output_image,
+
+	// version clash thomson
+	stbi_write_png("output_mo6.png", THOMSON_SCREEN_W, THOMSON_SCREEN_H, COLOR_COMP, output_image,
 				   THOMSON_SCREEN_W * COLOR_COMP);
+
+
+
 
 	free(original_image);
 	free(linearized_image);

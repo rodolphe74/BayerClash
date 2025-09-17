@@ -11,6 +11,8 @@
 #include <stb_image.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
+#define STB_IMAGE_RESIZE2_IMPLEMENTATION
+#include <stb_image_resize2.h>
 
 float clamp(float v)
 {
@@ -211,7 +213,7 @@ Point thom2screen(int x, int y, int screenW, int screenH, int centered)
 
 
 // Récupère un pixel RGBA normalisé en LinearColor
-static inline Color getPictureColor(const unsigned char *image, int width, int height, int i, int j)
+Color getPictureColor(const unsigned char *image, int width, int height, int i, int j)
 {
     if (i < 0 || j < 0 || i >= width || j >= height) {
         Color black = {0.0f, 0.0f, 0.0f};
@@ -572,6 +574,72 @@ void reduce_exoquant_palette_to_mo6(const unsigned char *input_palette, ColorPal
 		output_palette[i].b = thomson_full_palette[best_index].b;
 		output_palette[i].thomson_idx = i;
 	}
+}
+
+unsigned char *resize_if_necessary(const unsigned char *inputImage, const int ix, const int iy,
+								   unsigned char *resizedImage, int *ox, int *oy)
+{
+	float ratioX = 0, ratioY = 0, ratio;
+	int doResize = 0;
+
+	ratioX = ix / 320.0;
+	printf("ratio x -> %f\n", ratioX);
+	doResize = 1;
+
+	if (iy > 200) {
+		ratioY = iy / 200.0;
+		printf("ratio y -> %f\n", ratioY);
+		doResize = 1;
+	}
+
+	if (doResize) {
+		ratio = fmax(ratioX, ratioY);
+		printf("ratio -> %f\n", ratio);
+
+		int xx, yy;
+		xx = ix / ratio;
+		yy = iy / ratio;
+
+		printf("Nouvelles dimensions %d*%d\n", xx, yy);
+
+		resizedImage = malloc(xx * yy * COLOR_COMP);
+		stbir_resize_uint8_linear(inputImage, ix, iy, COLOR_COMP * ix, resizedImage, xx, yy, xx * COLOR_COMP,
+								  COLOR_COMP);
+		*ox = xx;
+		*oy = yy;
+		return resizedImage;
+	}
+	return NULL;
+}
+
+unsigned char *frame_into_thomson_res(const unsigned char *inputData, int ix, int iy, unsigned char *outputData, int *ox,
+								 int *oy)
+{
+	int targetw = THOMSON_SCREEN_W;
+	int targeth = THOMSON_SCREEN_H;
+
+	outputData = malloc(targetw * targeth * COLOR_COMP);
+	if (outputData) {
+		memset(outputData, 0, targetw * targeth * COLOR_COMP);
+		int k = 0, l = 0;
+		for (int j = 0; j < iy; j++) {
+			for (int i = 0; i < ix; i++) {
+				if (j < targeth && i < targetw) {
+					outputData[(k * targetw + l) * COLOR_COMP] = inputData[(j * ix + i) * COLOR_COMP];
+					outputData[(k * targetw + l) * COLOR_COMP + 1] = inputData[(j * ix + i) * COLOR_COMP + 1];
+					outputData[(k * targetw + l) * COLOR_COMP + 2] = inputData[(j * ix + i) * COLOR_COMP + 2];
+					outputData[(k * targetw + l) * COLOR_COMP + 3] = inputData[(j * ix + i) * COLOR_COMP + 3];
+				}
+				l++;
+			}
+			l = 0;
+			k++;
+		}
+		*ox = targetw;
+		*oy = targeth;
+		return outputData;
+	}
+	return NULL;
 }
 
 #endif

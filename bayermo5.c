@@ -37,7 +37,8 @@ int get_or_default(map histo, int key, int default_value)
 
 int main(int argc, char *argv[])
 {
-	char filename[] = "/Users/rodoc/develop/BayerClash/samples/demo.jpg";
+	// char filename[] = "/Users/rodoc/develop/BayerClash/samples/demo.jpg";
+	char *filename = argv[1];
 	int width, height, channels;
 	unsigned char *original_image = stbi_load(filename, &width, &height, &channels, COLOR_COMP);
 	if (!original_image) {
@@ -163,7 +164,7 @@ int main(int argc, char *argv[])
 	map_destroy(histo);
 	free_best_couples_map();
 
-	stbi_write_png("output.png", THOMSON_SCREEN_W, THOMSON_SCREEN_H, COLOR_COMP, output_image,
+	stbi_write_png("output_mo5.png", THOMSON_SCREEN_W, THOMSON_SCREEN_H, COLOR_COMP, output_image,
 				   THOMSON_SCREEN_W * COLOR_COMP);
 
 	free(linearized_image);
