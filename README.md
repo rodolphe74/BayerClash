@@ -14,3 +14,9 @@ Sans contraintes en rgb :
 Avec les contraintes MO6 de 2 couleurs max par bloc horizontal de 8 pixels sur une palette de 4096 couleurs:
 
 <img src="result/output_mo6.png" width=320>
+
+# Liens
+[https://github.com/Samuel-DEVULDER/UToPiC/tree/master]
+(https://github.com/matejlou/tetrapal)
+https://github.com/exoticorn/exoquant
+https://github.com/bkthomps/Containers
