@@ -17,6 +17,6 @@ Avec les contraintes MO6 de 2 couleurs max par bloc horizontal de 8 pixels sur u
 
 # Liens
 - [UToPic](https://github.com/Samuel-DEVULDER/UToPiC)
-(https://github.com/matejlou/tetrapal)
-(https://github.com/exoticorn/exoquant)
-(https://github.com/bkthomps/Containers)
+- [tetrapal](https://github.com/matejlou/tetrapal)
+- [exoquant](https://github.com/exoticorn/exoquant)
+- [C containers](https://github.com/bkthomps/Containers)
