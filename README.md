@@ -5,7 +5,7 @@ Conversion C du plugin LUA https://github.com/Samuel-DEVULDER/UToPiC/blob/master
 
 
 
-Puis expérimentation de tramage avec une palette de 16 couleurs non regulierement espacées.
+Puis expérimentation de tramage ordonné avec une palette de 16 couleurs non regulièrement espacées.
 
 Sans contraintes en rgb :
 
