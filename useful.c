@@ -426,21 +426,21 @@ void find_best_couple(const map *histo, const ColorPalette *palette, int palette
 		best_couples_map = map_init(sizeof(char[64]), sizeof(list), string_cmp);
 	}
 
-	char key[64];
-	generateKey(histo, key);
-	// printf("Key: %s\n", key);
+	// char key[64];
+	// generateKey(histo, key);
+	// // printf("Key: %s\n", key);
 
-	if (map_contains(best_couples_map, key)) {
-		// copy le resultat du cache dans best_couples
-		list_clear(*best_couples);
-		list best_couples_copy = list_init(sizeof(Couple));
-		map_get(&best_couples_copy, best_couples_map, key);
-		Couple *best_couples_array = (Couple *)malloc(list_size(best_couples_copy) * sizeof(Couple));
-		list_copy_to_array(best_couples_array, best_couples_copy);
-		list_add_all(*best_couples, best_couples_array, list_size(best_couples_copy));
-		free(best_couples_array);
-		return;
-	}
+	// if (map_contains(best_couples_map, key)) {
+	// 	// copy le resultat du cache dans best_couples
+	// 	list_clear(*best_couples);
+	// 	list best_couples_copy = list_init(sizeof(Couple));
+	// 	map_get(&best_couples_copy, best_couples_map, key);
+	// 	Couple *best_couples_array = (Couple *)malloc(list_size(best_couples_copy) * sizeof(Couple));
+	// 	list_copy_to_array(best_couples_array, best_couples_copy);
+	// 	list_add_all(*best_couples, best_couples_array, list_size(best_couples_copy));
+	// 	free(best_couples_array);
+	// 	return;
+	// }
 
 	list_clear(*best_couples);
 
@@ -474,12 +474,12 @@ void find_best_couple(const map *histo, const ColorPalette *palette, int palette
 	}
 
 	// met a jour le cache en copiant best_couples
-	Couple *best_couples_array = (Couple *)malloc(list_size(*best_couples) * sizeof(Couple));
-	list_copy_to_array(best_couples_array, *best_couples);
-	list best_couples_copy = list_init(sizeof(Couple));
-	list_add_all(best_couples_copy, best_couples_array, list_size(*best_couples));
-	map_put(best_couples_map, key, &best_couples_copy);
-	free(best_couples_array);
+	// Couple *best_couples_array = (Couple *)malloc(list_size(*best_couples) * sizeof(Couple));
+	// list_copy_to_array(best_couples_array, *best_couples);
+	// list best_couples_copy = list_init(sizeof(Couple));
+	// list_add_all(best_couples_copy, best_couples_array, list_size(*best_couples));
+	// map_put(best_couples_map, key, &best_couples_copy);
+	// free(best_couples_array);
 }
 
 void free_best_couples_map() {
