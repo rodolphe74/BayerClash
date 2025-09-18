@@ -642,4 +642,39 @@ unsigned char *frame_into_thomson_res(const unsigned char *inputData, int ix, in
 	return NULL;
 }
 
+int check_color_clash(const unsigned char *image, int width, int height, int block_size)
+{
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x += block_size) {
+			// tableau pour stocker jusqu'à 16 couleurs rencontrées
+			unsigned char colors[16][4];
+			int count = 0;
+
+			for (int k = 0; k < block_size && (x + k) < width; k++) {
+				const unsigned char *pixel = &image[(y * width + (x + k)) * COLOR_COMP];
+
+				// Chercher si cette couleur est déjà dans colors
+				int found = 0;
+				for (int i = 0; i < count; i++) {
+					if (memcmp(pixel, colors[i], COLOR_COMP) == 0) {
+						found = 1;
+						break;
+					}
+				}
+
+				// Sinon on l'ajoute
+				if (!found) {
+					if (count >= 2) {
+						// TROISIÈME couleur → clash détecté
+						return 0;
+					}
+					memcpy(colors[count], pixel, COLOR_COMP);
+					count++;
+				}
+			}
+		}
+	}
+	return 1; // pas de clash détecté
+}
+
 #endif

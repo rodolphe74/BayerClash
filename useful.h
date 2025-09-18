@@ -60,4 +60,5 @@ unsigned char *resize_if_necessary(const unsigned char *inputImage, const int ix
 								   unsigned char *resizedImage, int *ox, int *oy);
 unsigned char *frame_into_thomson_res(const unsigned char *inputData, int ix, int iy, unsigned char *outputData, int *ox,
 								 int *oy);
+int check_color_clash(const unsigned char *image, int width, int height, int block_size);
 #endif

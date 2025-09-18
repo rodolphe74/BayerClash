@@ -15,17 +15,9 @@
 
 #define COEF 0.6f
 
-// int string_cmp(const void *a, const void *b)
-// {
-// 	return strcmp(*(const char **)a, *(const char **)b);
-// }
+// resize avec imagemagick
+// magick ../samples/owl2.png -resize 320x200 -background black -gravity center -extent 320x200 crop.png
 
-// int int_cmp(const void *a, const void *b)
-// {
-// 	int ia = *(const int *)a;
-// 	int ib = *(const int *)b;
-// 	return (ia > ib) - (ia < ib); // Retourne 1, 0 ou -1
-// }
 
 int get_or_default(map histo, int key, int default_value)
 {
@@ -259,6 +251,11 @@ int main(int argc, char *argv[])
 	map_destroy(histo);
 	free_best_couples_map();
 	tetrapal_free(tetrapal);
+
+	int ok = check_color_clash(output_image, THOMSON_SCREEN_W, THOMSON_SCREEN_H, 8);
+	if (!ok) {
+		printf("Contraintes color_clash non respectées !\n");
+	}
 
 	// version clash thomson
 	stbi_write_png("output_mo6.png", THOMSON_SCREEN_W, THOMSON_SCREEN_H, COLOR_COMP, output_image,
