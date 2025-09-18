@@ -189,48 +189,48 @@ int main(int argc, char *argv[])
 				// Plus de 2 couleurs
 
 				// cas simple on prend les 2 couleurs les plus frequentes
-				// Couple two_most = find_two_most_frequent(&histo);
-				// c1 = two_most.c1;
-				// c2 = two_most.c2;
+				Couple two_most = find_two_most_frequent(&histo);
+				c1 = two_most.c1;
+				c2 = two_most.c2;
 
 
 				// cas meilleur couples
-				list best_couples;
-				best_couples = list_init(sizeof(Couple));
-				find_best_couple(&histo, mo6_palette, PALETTE_SIZE, &best_couples);
-				// display_couples(&best_couples);
+				// list best_couples;
+				// best_couples = list_init(sizeof(Couple));
+				// find_best_couple(&histo, mo6_palette, PALETTE_SIZE, &best_couples);
+				// // display_couples(&best_couples);
 
-				if (list_size(best_couples) == 1) {
-					Couple best;
-					list_get_at(&best, best_couples, 0);
-					c1 = best.c1;
-					c2 = best.c2;
-				} else {
-					double dm = DBL_MAX;
-					for (int i = 0; i < list_size(best_couples); i++) {
-						Couple couple;
-						list_get_at(&couple, best_couples, i);
-						double d = 0;
-						for (int k = 0; k < 8; k++) {
-							int qk = q[k];
-							int p = distance_between_colors(qk, couple.c1, mo6_palette) <
-											distance_between_colors(qk, couple.c2, mo6_palette)
-										? couple.c1
-										: couple.c2;
-							Color e = color_mul(
-								color_sub(fromColorPalette(mo6_palette[qk]), fromColorPalette(mo6_palette[p])), COEF);
-							// Color z = color_add(get_average_pixel(linearized_image, width, height, x + k, y + 1), e);
-							Color z = color_add(get_average_pixel(original_image, width, height, x + k, y + 1), e);
-							d += clamp_deviation(z.r) + clamp_deviation(z.g) + clamp_deviation(z.b);
-						}
-						if (d <= dm) {
-							dm = d;
-							c1 = couple.c1;
-							c2 = couple.c2;
-						}
-					}
-				}
-				list_destroy(best_couples);
+				// if (list_size(best_couples) == 1) {
+				// 	Couple best;
+				// 	list_get_at(&best, best_couples, 0);
+				// 	c1 = best.c1;
+				// 	c2 = best.c2;
+				// } else {
+				// 	double dm = DBL_MAX;
+				// 	for (int i = 0; i < list_size(best_couples); i++) {
+				// 		Couple couple;
+				// 		list_get_at(&couple, best_couples, i);
+				// 		double d = 0;
+				// 		for (int k = 0; k < 8; k++) {
+				// 			int qk = q[k];
+				// 			int p = distance_between_colors(qk, couple.c1, mo6_palette) <
+				// 							distance_between_colors(qk, couple.c2, mo6_palette)
+				// 						? couple.c1
+				// 						: couple.c2;
+				// 			Color e = color_mul(
+				// 				color_sub(fromColorPalette(mo6_palette[qk]), fromColorPalette(mo6_palette[p])), COEF);
+				// 			// Color z = color_add(get_average_pixel(linearized_image, width, height, x + k, y + 1), e);
+				// 			Color z = color_add(get_average_pixel(original_image, width, height, x + k, y + 1), e);
+				// 			d += clamp_deviation(z.r) + clamp_deviation(z.g) + clamp_deviation(z.b);
+				// 		}
+				// 		if (d <= dm) {
+				// 			dm = d;
+				// 			c1 = couple.c1;
+				// 			c2 = couple.c2;
+				// 		}
+				// 	}
+				// }
+				// list_destroy(best_couples);
 			}
 			for (int k = 0; k < 8; k++) {
 				int z = x + k;

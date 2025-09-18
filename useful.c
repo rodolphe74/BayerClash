@@ -419,6 +419,7 @@ void display_couples(const list *l) {
 }
 
 static map best_couples_map = NULL;
+// teste toutes les paires (i, j) dans les 16 couleurs → choisit celles qui minimisent la distance pondérée,
 void find_best_couple(const map *histo, const ColorPalette *palette, int palette_size, list *best_couples)
 {
 	if (best_couples_map == NULL) {
