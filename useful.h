@@ -24,6 +24,9 @@ float clamp_deviation(float v);
 Color color_add(Color a, Color b);
 Color color_sub(Color a, Color b);
 Color color_mul(Color a, float coef);
+Color srgb_to_linear(Color pixel);
+Color linear_to_srgb(Color pixel);
+
 Color fromColorPalette(ColorPalette c);
 
 struct Point {
@@ -42,9 +45,12 @@ void convert_float_to_rgba(const float *input, const int image_width, const int 
 void convert_palette_to_float(const unsigned char *input, const int palette_size, float *output);
 void convert_indexed_to_rgba(const unsigned char *input, const int image_width, const int image_height,
 							 const unsigned char *palette, const int palette_size, unsigned char *output);
+
+void convert_rgba_to_lineare(const unsigned char *input, const int image_width, const int image_height, unsigned char *output);
+
 void output_palette(const float *palette, const int palette_size, const char *filename);
 Color get_pixel(unsigned char *image, int width, int x, int y, int comps);
-Color getPictureColor(const unsigned char *image, int width, int height, int i, int j);
+Color get_picture_color(const unsigned char *image, int width, int height, int i, int j);
 Color get_average_pixel(const unsigned char *image, int width, int height, int x, int y);
 float linearize(float val);
 unsigned char *linearizeImage(unsigned char *image, int width, int height);

@@ -60,15 +60,32 @@ Color color_clamp(Color c)
 	return result;
 }
 
-Color fromColorPalette(ColorPalette c)
+inline Color srgb_to_linear(Color pixel)
 {
-    Color result;
-    result.r = c.r / 255.0f;
-    result.g = c.g / 255.0f;
-    result.b = c.b / 255.0f;
-    return result;
+	Color c;
+	c.r = pixel.r > 0.04045f ? powf((pixel.r + 0.055f) / 1.055f, 2.4f) : pixel.r / 12.92f;
+	c.g = pixel.g > 0.04045f ? powf((pixel.g + 0.055f) / 1.055f, 2.4f) : pixel.g / 12.92f;
+	c.b = pixel.b > 0.04045f ? powf((pixel.b + 0.055f) / 1.055f, 2.4f) : pixel.b / 12.92f;
+	return c;
 }
 
+inline Color linear_to_srgb(Color pixel)
+{
+	Color c;
+	c.r = pixel.r > 0.0031308f ? 1.055f * powf(pixel.r, 1.0f / 2.4f) - 0.055f : 12.92f * pixel.r;
+	c.g = pixel.g > 0.0031308f ? 1.055f * powf(pixel.g, 1.0f / 2.4f) - 0.055f : 12.92f * pixel.g;
+	c.b = pixel.b > 0.0031308f ? 1.055f * powf(pixel.b, 1.0f / 2.4f) - 0.055f : 12.92f * pixel.b;
+	return c;
+}
+
+Color fromColorPalette(ColorPalette c)
+{
+	Color result;
+	result.r = c.r / 255.0f;
+	result.g = c.g / 255.0f;
+	result.b = c.b / 255.0f;
+	return result;
+}
 
 void convert_rgba_to_float(const unsigned char *input, const int image_width, const int image_height, float *output)
 {
@@ -102,7 +119,7 @@ void convert_float_to_rgba(const float *input, const int image_width, const int 
 			out_pixel[0] = (unsigned char)(fmin(fmax(pixel[0], 0.0f), 1.0f) * 255.0f); // R
 			out_pixel[1] = (unsigned char)(fmin(fmax(pixel[1], 0.0f), 1.0f) * 255.0f); // G
 			out_pixel[2] = (unsigned char)(fmin(fmax(pixel[2], 0.0f), 1.0f) * 255.0f); // B
-			out_pixel[3] = 255;														 // A
+			out_pixel[3] = 255;														   // A
 		}
 	}
 }
@@ -138,6 +155,27 @@ void convert_indexed_to_rgba(const unsigned char *input, const int image_width, 
 			out_pixel[1] = color[1]; // G
 			out_pixel[2] = color[2]; // B
 			out_pixel[3] = 255;		 // A
+		}
+	}
+}
+
+void convert_rgba_to_lineare(const unsigned char *input, const int image_width, const int image_height,
+							 unsigned char *output)
+{
+	// Iterate over pixels in the input image
+	for (int y = 0; y < image_height; y++) {
+		for (int x = 0; x < image_width; x++) {
+			// Get the current pixel from the input buffer
+			const int image_index = x + y * image_width;
+			const unsigned char *pixel = &input[image_index * COLOR_COMP];
+
+			Color c = {*pixel / 255.0f, *(pixel + 1) / 255.0f, *(pixel + 2) / 255.0f};
+			c = srgb_to_linear(c);
+
+			// Convert to float and normalize to [0, 1]
+			output[image_index] = (unsigned char)roundf(c.r * 255.0f);	   // R
+			output[image_index + 1] = (unsigned char)roundf(c.g * 255.0f); // G
+			output[image_index + 2] = (unsigned char)roundf(c.b * 255.0f); // B
 		}
 	}
 }
@@ -181,101 +219,102 @@ void output_palette(const float *palette, const int palette_size, const char *fi
 	free(img);
 }
 
-Color get_pixel(unsigned char* image, int width, int x, int y, int comps) {
-    int index = (y * width + x) * comps;
-    Color color;
-    color.r = image[index] / 255.0f;
-    color.g = image[index + 1] / 255.0f;
-    color.b = image[index + 2] / 255.0f;
-    return color;
+Color get_pixel(unsigned char *image, int width, int x, int y, int comps)
+{
+	int index = (y * width + x) * comps;
+	Color color;
+	color.r = image[index] / 255.0f;
+	color.g = image[index + 1] / 255.0f;
+	color.b = image[index + 2] / 255.0f;
+	return color;
 };
-
 
 Point thom2screen(int x, int y, int screenW, int screenH, int centered)
 {
-    double i, j;
+	double i, j;
 
-    if ((double)screenW / screenH < 1.6) {
-        double o = centered ? (screenW - screenH * 1.6) / 2.0 : 0.0;
-        i = x * (double)screenH / THOMSON_SCREEN_H_FLOAT + o;
-        j = y * (double)screenH / THOMSON_SCREEN_H_FLOAT;
-    } else {
-        double o = centered ? (screenH - screenW / 1.6) / 2.0 : 0.0;
-        i = x * (double)screenW / THOMSON_SCREEN_W_FLOAT;
-        j = y * (double)screenW / THOMSON_SCREEN_W_FLOAT + o;
-    }
+	if ((double)screenW / screenH < 1.6) {
+		double o = centered ? (screenW - screenH * 1.6) / 2.0 : 0.0;
+		i = x * (double)screenH / THOMSON_SCREEN_H_FLOAT + o;
+		j = y * (double)screenH / THOMSON_SCREEN_H_FLOAT;
+	} else {
+		double o = centered ? (screenH - screenW / 1.6) / 2.0 : 0.0;
+		i = x * (double)screenW / THOMSON_SCREEN_W_FLOAT;
+		j = y * (double)screenW / THOMSON_SCREEN_W_FLOAT + o;
+	}
 
-    Point p;
-    p.x = (int)floor(i);
-    p.y = (int)floor(j);
-    return p;
+	Point p;
+	p.x = (int)floor(i);
+	p.y = (int)floor(j);
+	return p;
 }
 
-
 // Récupère un pixel RGBA normalisé en LinearColor
-Color getPictureColor(const unsigned char *image, int width, int height, int i, int j)
+Color get_picture_color(const unsigned char *image, int width, int height, int i, int j)
 {
-    if (i < 0 || j < 0 || i >= width || j >= height) {
-        Color black = {0.0f, 0.0f, 0.0f};
-        return black;
-    }
+	if (i < 0 || j < 0 || i >= width || j >= height) {
+		Color black = {0.0f, 0.0f, 0.0f};
+		return black;
+	}
 
-    int idx = (j * width + i) * COLOR_COMP; // RGBA
-    Color c;
-    c.r = image[idx + 0] / 255.0f;
-    c.g = image[idx + 1] / 255.0f;
-    c.b = image[idx + 2] / 255.0f;
-    return c;
+	int idx = (j * width + i) * COLOR_COMP; // RGBA
+	Color c;
+	c.r = image[idx + 0] / 255.0f;
+	c.g = image[idx + 1] / 255.0f;
+	c.b = image[idx + 2] / 255.0f;
+	return c;
 }
 
 // Traduction de getLinearPixel
 Color get_average_pixel(const unsigned char *image, int width, int height, int x, int y)
 {
-    Point p1 = thom2screen(x, y, width, height, 1);
-    Point p2 = thom2screen(x + 1, y + 1, width, height, 1);
+	Point p1 = thom2screen(x, y, width, height, 1);
+	Point p2 = thom2screen(x + 1, y + 1, width, height, 1);
 
-    int x1 = p1.x;
-    int y1 = p1.y;
-    int x2 = p2.x;
-    int y2 = p2.y;
+	int x1 = p1.x;
+	int y1 = p1.y;
+	int x2 = p2.x;
+	int y2 = p2.y;
 
-    if (x2 == x1) x2 = x1 + 1;
-    if (y2 == y1) y2 = y1 + 1;
+	if (x2 == x1) x2 = x1 + 1;
+	if (y2 == y1) y2 = y1 + 1;
 
-    float r = 0.0f, g = 0.0f, b = 0.0f;
-    int count = 0;
+	float r = 0.0f, g = 0.0f, b = 0.0f;
+	int count = 0;
 
-    for (int i = x1; i < x2; i++) {
-        for (int j = y1; j < y2; j++) {
-            Color c = getPictureColor(image, width, height, i, j);
-            r += c.r;
-            g += c.g;
-            b += c.b;
-            count++;
-        }
-    }
+	for (int i = x1; i < x2; i++) {
+		for (int j = y1; j < y2; j++) {
+			Color c = get_picture_color(image, width, height, i, j);
+			r += c.r;
+			g += c.g;
+			b += c.b;
+			count++;
+		}
+	}
 
-    if (count == 0) {
-        Color black = {0.0f, 0.0f, 0.0f};
-        return black;
-    }
+	if (count == 0) {
+		Color black = {0.0f, 0.0f, 0.0f};
+		return black;
+	}
 
-    Color out;
-    out.r = r / count;
-    out.g = g / count;
-    out.b = b / count;
-    return out;
+	Color out;
+	out.r = r / count;
+	out.g = g / count;
+	out.b = b / count;
+	return out;
 }
 
-float linearize(float val) {
-    if (val <= 0.081f) {
-        return val / 4.5f;
-    } else {
-        return powf((val + 0.099f) / 1.099f, 2.2f);
-    }
+float linearize(float val)
+{
+	if (val <= 0.081f) {
+		return val / 4.5f;
+	} else {
+		return powf((val + 0.099f) / 1.099f, 2.2f);
+	}
 }
 
-unsigned char *linearizeImage(unsigned char *image, int width, int height) {
+unsigned char *linearizeImage(unsigned char *image, int width, int height)
+{
 
 	unsigned char *result = malloc(width * height * COLOR_COMP * sizeof(unsigned char));
 
@@ -285,7 +324,7 @@ unsigned char *linearizeImage(unsigned char *image, int width, int height) {
 		result[i * COLOR_COMP + 0] = roundf(linearize(image[i * COLOR_COMP + 0] / 255.0f) * 255.0f); // R
 		result[i * COLOR_COMP + 1] = roundf(linearize(image[i * COLOR_COMP + 1] / 255.0f) * 255.0f); // G
 		result[i * COLOR_COMP + 2] = roundf(linearize(image[i * COLOR_COMP + 2] / 255.0f) * 255.0f); // B
-		result[i * COLOR_COMP + 3] = 1.0f; // A	
+		result[i * COLOR_COMP + 3] = 1.0f;															 // A
 	}
 
 	// 2. Histogramme des composantes R, G, B
@@ -366,21 +405,19 @@ unsigned char *linearizeImage(unsigned char *image, int width, int height) {
 
 void generateKey(const map *h, char key[64])
 {
-	int left = 0;
+	int vals[16] = {0}; // valeurs par défaut si absentes
 	int val;
-	for (int i = 1; i <= 4; i++) {
-		bk_bool here = map_get(&val, *h, &i);
-		left = left * 8 + (here ? val : 0);
+	for (int i = 0; i < 16; i++) {
+		if (map_get(&val, *h, &i)) {
+			vals[i] = val;
+		}
 	}
 
-	int right = 0;
-	for (int i = 5; i <= 8; i++) {
-		bk_bool here = map_get(&val, *h, &i);
-		right = right * 8 + (here ? val : 0);
-	}
-
-	// allouer une chaîne "left,right"
-	snprintf(key, 64, "%d,%d", left, right);
+	snprintf(key, 64,
+			 "%d,%d,%d,%d,%d,%d,%d,%d,"
+			 "%d,%d,%d,%d,%d,%d,%d,%d",
+			 vals[0], vals[1], vals[2], vals[3], vals[4], vals[5], vals[6], vals[7], vals[8], vals[9], vals[10],
+			 vals[11], vals[12], vals[13], vals[14], vals[15]);
 }
 
 double distance_between_colors(int index1, int index2, const ColorPalette *palette)
@@ -396,7 +433,8 @@ double distance_between_colors(int index1, int index2, const ColorPalette *palet
 	return d;
 }
 
-void display_histo(const map *histo) {
+void display_histo(const map *histo)
+{
 	unsigned int *first_key, *last_key, *current_key;
 	first_key = map_first(*histo);
 	last_key = map_last(*histo);
@@ -409,7 +447,8 @@ void display_histo(const map *histo) {
 	}
 }
 
-void display_couples(const list *l) {
+void display_couples(const list *l)
+{
 	int size = list_size(*l);
 	for (int i = 0; i < size; i++) {
 		Couple c;
@@ -418,42 +457,38 @@ void display_couples(const list *l) {
 	}
 }
 
+typedef struct Couple_array {
+	Couple *couples;
+	size_t size;
+} Couple_array;
 static map best_couples_map = NULL;
-// teste toutes les paires (i, j) dans les 16 couleurs → choisit celles qui minimisent la distance pondérée,
 void find_best_couple(const map *histo, const ColorPalette *palette, int palette_size, list *best_couples)
 {
 	if (best_couples_map == NULL) {
-		best_couples_map = map_init(sizeof(char[64]), sizeof(list), string_cmp);
+		best_couples_map = map_init(sizeof(char[64]), sizeof(Couple_array), string_cmp);
 	}
 
-	// char key[64];
-	// generateKey(histo, key);
-	// // printf("Key: %s\n", key);
-
-	// if (map_contains(best_couples_map, key)) {
-	// 	// copy le resultat du cache dans best_couples
-	// 	list_clear(*best_couples);
-	// 	list best_couples_copy = list_init(sizeof(Couple));
-	// 	map_get(&best_couples_copy, best_couples_map, key);
-	// 	Couple *best_couples_array = (Couple *)malloc(list_size(best_couples_copy) * sizeof(Couple));
-	// 	list_copy_to_array(best_couples_array, best_couples_copy);
-	// 	list_add_all(*best_couples, best_couples_array, list_size(best_couples_copy));
-	// 	free(best_couples_array);
-	// 	return;
-	// }
+	char key[64];
+	generateKey(histo, key);
 
 	list_clear(*best_couples);
 
+	// --- cache hit ---
+	if (map_contains(best_couples_map, key)) {
+		Couple_array best_couples_array;
+		map_get(&best_couples_array, best_couples_map, key);
+		list_add_all(*best_couples, best_couples_array.couples, best_couples_array.size);
+		return;
+	}
+
+	// --- sinon, on calcule ---
 	double dm = DBL_MAX;
 	for (int i = 0; i < 15; i++) {
 		for (int j = i + 1; j < 16; j++) {
 			double d = 0;
-
-			unsigned int *first_key, *last_key, *current_key;
-			first_key = map_first(*histo);
-			last_key = map_last(*histo);
-			current_key = first_key;
+			unsigned int *current_key = map_first(*histo);
 			int n = 0;
+
 			while (current_key != NULL) {
 				map_get(&n, *histo, current_key);
 				double d1 = distance_between_colors(*current_key, i, palette);
@@ -473,25 +508,24 @@ void find_best_couple(const map *histo, const ColorPalette *palette, int palette
 		}
 	}
 
-	// met a jour le cache en copiant best_couples
-	// Couple *best_couples_array = (Couple *)malloc(list_size(*best_couples) * sizeof(Couple));
-	// list_copy_to_array(best_couples_array, *best_couples);
-	// list best_couples_copy = list_init(sizeof(Couple));
-	// list_add_all(best_couples_copy, best_couples_array, list_size(*best_couples));
-	// map_put(best_couples_map, key, &best_couples_copy);
-	// free(best_couples_array);
+	// --- mettre à jour le cache ---
+	Couple_array best_couples_array;
+	best_couples_array.size = list_size(*best_couples);
+	best_couples_array.couples = malloc(best_couples_array.size * sizeof(Couple));
+	list_copy_to_array(best_couples_array.couples, *best_couples);
+	map_put(best_couples_map, key, &best_couples_array);
 }
 
-void free_best_couples_map() {
+void free_best_couples_map()
+{
 	if (best_couples_map != NULL) {
 		unsigned int *first_key = map_first(best_couples_map);
 		unsigned int *current_key = first_key;
 		while (current_key != NULL) {
-			list l;
 			// printf("Freeing key %s\n", (char *)current_key);
-			map_get(&l, best_couples_map, current_key);
-			list_clear(l);
-			list_destroy(l);
+			Couple_array couple_array;
+			map_get(&couple_array, best_couples_map, current_key);
+			free(couple_array.couples);
 			current_key = map_higher(best_couples_map, current_key);
 		}
 		map_destroy(best_couples_map);
@@ -534,18 +568,18 @@ Couple find_two_most_frequent(const map *histo)
 	return result;
 }
 
-void pset(unsigned char *image, int x, int y, ColorPalette *palette, int color_index, int width, int height) {
+void pset(unsigned char *image, int x, int y, ColorPalette *palette, int color_index, int width, int height)
+{
 	if (x < 0 || y < 0 || x >= width || y >= height) {
 		return;
 	}
 	int index = (y * width + x) * COLOR_COMP;
 	ColorPalette color = palette[color_index];
-	image[index] = color.r;     // R
+	image[index] = color.r;		// R
 	image[index + 1] = color.g; // G
 	image[index + 2] = color.b; // B
-	image[index + 3] = 255;     // A
+	image[index + 3] = 255;		// A
 }
-
 
 void reduce_exoquant_palette_to_mo6(const unsigned char *input_palette, ColorPalette *output_palette, int input_size)
 {
@@ -576,6 +610,9 @@ void reduce_exoquant_palette_to_mo6(const unsigned char *input_palette, ColorPal
 		output_palette[i].thomson_idx = i;
 	}
 }
+
+
+
 
 unsigned char *resize_if_necessary(const unsigned char *inputImage, const int ix, const int iy,
 								   unsigned char *resizedImage, int *ox, int *oy)
@@ -613,8 +650,8 @@ unsigned char *resize_if_necessary(const unsigned char *inputImage, const int ix
 	return NULL;
 }
 
-unsigned char *frame_into_thomson_res(const unsigned char *inputData, int ix, int iy, unsigned char *outputData, int *ox,
-								 int *oy)
+unsigned char *frame_into_thomson_res(const unsigned char *inputData, int ix, int iy, unsigned char *outputData,
+									  int *ox, int *oy)
 {
 	int targetw = THOMSON_SCREEN_W;
 	int targeth = THOMSON_SCREEN_H;

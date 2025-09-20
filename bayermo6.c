@@ -73,6 +73,9 @@ int main(int argc, char *argv[])
 	stbi_write_png("linearized.png", width, height, COLOR_COMP,
 				   linearized_image, width * COLOR_COMP);
 
+	unsigned char *lineare_image = malloc(width * height * COLOR_COMP);
+	convert_rgba_to_lineare(original_image, width, height, lineare_image);
+	
 	unsigned char *output_image = malloc(THOMSON_SCREEN_W * THOMSON_SCREEN_H * COLOR_COMP * sizeof(unsigned char));
 
 	init_thomson_palette();
@@ -113,11 +116,12 @@ int main(int argc, char *argv[])
 
 
 	// TODO util
+	// initialisation avec palette lineaire
 	for (int i = 0; i < PALETTE_SIZE; i++) {
-		printf("%d,%d,%d\n", mo6_palette[i].r, mo6_palette[i].g, mo6_palette[i].b);
 		float_mo6_palette[i * 3] = mo6_palette[i].r / 255.0f;
 		float_mo6_palette[i * 3 + 1] = mo6_palette[i].g / 255.0f;
 		float_mo6_palette[i * 3 + 2] = mo6_palette[i].b / 255.0f;
+		
 	}
 	output_palette(float_mo6_palette, PALETTE_SIZE, "palette_mo6.png");
 	// free(float_mo6_palette);
@@ -193,12 +197,10 @@ int main(int argc, char *argv[])
 				// c1 = two_most.c1;
 				// c2 = two_most.c2;
 
-
 				// cas meilleur couples
 				list best_couples;
 				best_couples = list_init(sizeof(Couple));
 				find_best_couple(&histo, mo6_palette, PALETTE_SIZE, &best_couples);
-				// display_couples(&best_couples);
 
 				if (list_size(best_couples) == 1) {
 					Couple best;
@@ -266,6 +268,7 @@ int main(int argc, char *argv[])
 
 	free(original_image);
 	free(linearized_image);
+	free(lineare_image);
 	free(output_image);
 
 	return 0;
