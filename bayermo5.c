@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 				Color d = color_sub(fromColorPalette(mo5_palette[qk]), fromColorPalette(mo5_palette[chosen]));
 				// repousse l'erreur sur le pixel du dessous
 				err2[z + 1] = color_add(err2[z + 1], color_mul(d, COEF));
-				pset(output_image, z, y, mo5_palette, (chosen == c1) ? (c1) : (c2), THOMSON_SCREEN_W, THOMSON_SCREEN_H);
+				pset_lineare(output_image, z, y, mo5_palette, (chosen == c1) ? (c1) : (c2), THOMSON_SCREEN_W, THOMSON_SCREEN_H);
 			}
 		}
 	}

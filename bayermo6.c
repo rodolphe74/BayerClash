@@ -1,6 +1,7 @@
 #include "useful.h"
 #include "matrix.h"
 #include "thomson.h"
+#include "k7.h"
 #include "comparator.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,13 +70,10 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	unsigned char *linearized_image = linearizeImage(original_image, width, height);
-	stbi_write_png("linearized.png", width, height, COLOR_COMP,
-				   linearized_image, width * COLOR_COMP);
-
 	unsigned char *lineare_image = malloc(width * height * COLOR_COMP);
 	convert_rgba_to_lineare(original_image, width, height, lineare_image);
-	
+	// stbi_write_png("output_lineare.png", width, height, COLOR_COMP, lineare_image, width * COLOR_COMP);
+
 	unsigned char *output_image = malloc(THOMSON_SCREEN_W * THOMSON_SCREEN_H * COLOR_COMP * sizeof(unsigned char));
 
 	init_thomson_palette();
@@ -114,18 +112,22 @@ int main(int argc, char *argv[])
 	// il faut reduire la palette exoquant aux nuances disponibles sur mo6
 	reduce_exoquant_palette_to_mo6(palette, mo6_palette, PALETTE_SIZE);
 
-
-	// TODO util
-	// initialisation avec palette lineaire
+	// initialisation des palettes lineaires
+	ColorPalette mo6_lineare_palette[16] = {};
 	for (int i = 0; i < PALETTE_SIZE; i++) {
-		float_mo6_palette[i * 3] = mo6_palette[i].r / 255.0f;
-		float_mo6_palette[i * 3 + 1] = mo6_palette[i].g / 255.0f;
-		float_mo6_palette[i * 3 + 2] = mo6_palette[i].b / 255.0f;
-		
+		Color c = {mo6_palette[i].r / 255.0f, mo6_palette[i].g / 255.0f, mo6_palette[i].b / 255.0f};
+		c = srgb_to_linear(c);
+		mo6_lineare_palette[i].r = c.r * 255.0f;
+		mo6_lineare_palette[i].g = c.g * 255.0f;
+		mo6_lineare_palette[i].b = c.b * 255.0f; 
+		mo6_lineare_palette[i].thomson_idx = mo6_palette[i].thomson_idx;
+		float_mo6_palette[i * 3] = mo6_lineare_palette[i].r / 255.0f;
+		float_mo6_palette[i * 3 + 1] = mo6_lineare_palette[i].g / 255.0f;
+		float_mo6_palette[i * 3 + 2] = mo6_lineare_palette[i].b / 255.0f;
 	}
 	output_palette(float_mo6_palette, PALETTE_SIZE, "palette_mo6.png");
 	// free(float_mo6_palette);
-	
+
 	// Triangulation de la palette
 	Tetrapal *tetrapal = tetrapal_new(float_mo6_palette, PALETTE_SIZE);
 	unsigned char *output_tetra_indexed = malloc(width * height * sizeof(char));
@@ -200,7 +202,7 @@ int main(int argc, char *argv[])
 				// cas meilleur couples
 				list best_couples;
 				best_couples = list_init(sizeof(Couple));
-				find_best_couple(&histo, mo6_palette, PALETTE_SIZE, &best_couples);
+				find_best_couple(&histo, mo6_lineare_palette, PALETTE_SIZE, &best_couples);
 
 				if (list_size(best_couples) == 1) {
 					Couple best;
@@ -215,12 +217,12 @@ int main(int argc, char *argv[])
 						double d = 0;
 						for (int k = 0; k < 8; k++) {
 							int qk = q[k];
-							int p = distance_between_colors(qk, couple.c1, mo6_palette) <
-											distance_between_colors(qk, couple.c2, mo6_palette)
+							int p = distance_between_colors(qk, couple.c1, mo6_lineare_palette) <
+											distance_between_colors(qk, couple.c2, mo6_lineare_palette)
 										? couple.c1
 										: couple.c2;
 							Color e = color_mul(
-								color_sub(fromColorPalette(mo6_palette[qk]), fromColorPalette(mo6_palette[p])), COEF);
+								color_sub(fromColorPalette(mo6_lineare_palette[qk]), fromColorPalette(mo6_lineare_palette[p])), COEF);
 							// Color z = color_add(get_average_pixel(linearized_image, width, height, x + k, y + 1), e);
 							Color z = color_add(get_average_pixel(original_image, width, height, x + k, y + 1), e);
 							d += clamp_deviation(z.r) + clamp_deviation(z.g) + clamp_deviation(z.b);
@@ -239,13 +241,14 @@ int main(int argc, char *argv[])
 				// couleurs exacte après matrice
 				int qk = q[k];
 				// choix de la couleur du couple minimisant la distance
-				int chosen = distance_between_colors(qk, c1, mo6_palette) < distance_between_colors(qk, c2, mo6_palette)
+				int chosen = distance_between_colors(qk, c1, mo6_lineare_palette) < distance_between_colors(qk, c2, mo6_lineare_palette)
 								 ? c1
 								 : c2;
 				// différence
-				Color d = color_sub(fromColorPalette(mo6_palette[qk]), fromColorPalette(mo6_palette[chosen]));
+				Color d = color_sub(fromColorPalette(mo6_lineare_palette[qk]), fromColorPalette(mo6_lineare_palette[chosen]));
 				// repousse l'erreur sur le pixel du dessous
 				err2[z + 1] = color_add(err2[z + 1], color_mul(d, COEF));
+				// pset_lineare(output_image, z, y, mo6_lineare_palette, (chosen == c1) ? (c1) : (c2), THOMSON_SCREEN_W, THOMSON_SCREEN_H);
 				pset(output_image, z, y, mo6_palette, (chosen == c1) ? (c1) : (c2), THOMSON_SCREEN_W, THOMSON_SCREEN_H);
 			}
 		}
@@ -263,11 +266,21 @@ int main(int argc, char *argv[])
 	stbi_write_png("output_mo6.png", THOMSON_SCREEN_W, THOMSON_SCREEN_H, COLOR_COMP, output_image,
 				   THOMSON_SCREEN_W * COLOR_COMP);
 
+	// to-snap
+	IntVector pixels, colors;
+	init_vector(&pixels);
+	init_vector(&colors);
+	save_as_to_snap("OUTMO6", output_image, mo6_palette, &pixels, &colors);
+	free_vector(&pixels);
+	free_vector(&colors);
 
-
+	// Ajout dans une k7
+	FILE *fick7 = fopen("clash.k7", "wb");
+	ajouterFichier(fick7, "OUTMO6.MAP");
+	fclose(fick7);
+	printf("clash.k7 créé\n");
 
 	free(original_image);
-	free(linearized_image);
 	free(lineare_image);
 	free(output_image);
 

@@ -1,7 +1,17 @@
 #ifndef THOMSON_H
 #define THOMSON_H
 
+#define PALETTE_SIZE 16
+#define COLOR_COMP 4
+#define THOMSON_SCREEN_W 320
+#define THOMSON_SCREEN_H 200
+
+
 #include <stdint.h>
+#include <list.h>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
 
 typedef struct {
 	unsigned char r, g, b;
@@ -9,27 +19,18 @@ typedef struct {
 } ColorPalette;
 
 
-// ColorPalette red_255[16] = {{0, 0, 0, 0},	 {96, 0, 0, 1},	  {122, 0, 0, 2},  {142, 0, 0, 3},
-// 							{158, 0, 0, 4},	 {170, 0, 0, 5},  {183, 0, 0, 6},  {193, 0, 0, 7},
-// 							{204, 0, 0, 8},	 {211, 0, 0, 9},  {219, 0, 0, 10}, {226, 0, 0, 11},
-// 							{234, 0, 0, 12}, {242, 0, 0, 13}, {249, 0, 0, 14}, {255, 0, 0, 15}};
+typedef struct {
+	uint8_t *data;
+	size_t size;
+	size_t capacity;
+} IntVector;
 
-// // Green : 0 16 32 48 64 80 96 112 128 144 160 176 192 208 224 240
-// ColorPalette green_255[16] = {{0, 0, 0, 0},		{0, 96, 0, 16},	  {0, 122, 0, 32},	{0, 142, 0, 48},
-// 							  {0, 158, 0, 64},	{0, 170, 0, 80},  {0, 183, 0, 96},	{0, 193, 0, 112},
-// 							  {0, 204, 0, 128}, {0, 211, 0, 144}, {0, 219, 0, 160}, {0, 226, 0, 176},
-// 							  {0, 234, 0, 192}, {0, 242, 0, 208}, {0, 249, 0, 224}, {0, 255, 0, 240}};
-
-// // Blue : 0 256 512 768 1024 1280 1536 1792 2048 2304 2560 2816 3072 3328 3584 3840
-// ColorPalette blue_255[16] = {{0, 0, 0, 0},		{0, 0, 96, 256},   {0, 0, 122, 512},  {0, 0, 142, 768},
-// 							 {0, 0, 158, 1024}, {0, 0, 170, 1280}, {0, 0, 183, 1536}, {0, 0, 193, 1792},
-// 							 {0, 0, 204, 2048}, {0, 0, 211, 2304}, {0, 0, 219, 2560}, {0, 0, 226, 2816},
-// 							 {0, 0, 234, 3072}, {0, 0, 242, 3328}, {0, 0, 249, 3584}, {0, 0, 255, 3840}};
-
-// ColorPalette thomson_full_palette[4096];
-
-// int mo5_palette_indexes[16] = {0, 15, 240, 255, 51, 204, 187, 255, 85, 170, 102, 153, 204, 51, 153, 255};
-// ColorPalette mo5_palette[16] = {};
+typedef struct {
+	uint8_t columns;
+	uint8_t lines;
+	IntVector rama;
+	IntVector ramb;
+} MAP_SEG;
 
 extern ColorPalette thomson_full_palette[4096];
 extern int mo5_palette_indexes[16];
@@ -37,5 +38,20 @@ extern ColorPalette mo5_palette[16];
 
 void init_thomson_palette();
 void init_mo5_palette();
+
+
+
+
+
+
+void init_vector(IntVector *vec);
+void push_back(IntVector *vec, uint8_t value);
+void free_vector(IntVector *vec);
+
+
+
+void save_as_to_snap(const char *name, const uint8_t *output_image_data, ColorPalette thomson_palette[PALETTE_SIZE], IntVector *pixels, IntVector *colors);
+
+
 
 #endif

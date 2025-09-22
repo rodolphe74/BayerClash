@@ -60,6 +60,7 @@ void display_couples(const list *l);
 void find_best_couple(const map *histo, const ColorPalette *palette, int palette_size, list *best_couples);
 void free_best_couples_map();
 Couple find_two_most_frequent(const map *histo);
+void pset_lineare(unsigned char *image, int x, int y, ColorPalette *palette, int color_index, int width, int height);
 void pset(unsigned char *image, int x, int y, ColorPalette *palette, int color_index, int width, int height);
 void reduce_exoquant_palette_to_mo6(const unsigned char *input_palette, ColorPalette *output_palette, int input_size);
 unsigned char *resize_if_necessary(const unsigned char *inputImage, const int ix, const int iy,

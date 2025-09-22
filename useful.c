@@ -166,8 +166,8 @@ void convert_rgba_to_lineare(const unsigned char *input, const int image_width, 
 	for (int y = 0; y < image_height; y++) {
 		for (int x = 0; x < image_width; x++) {
 			// Get the current pixel from the input buffer
-			const int image_index = x + y * image_width;
-			const unsigned char *pixel = &input[image_index * COLOR_COMP];
+			const int image_index = (x + y * image_width) * COLOR_COMP;
+			const unsigned char *pixel = &input[image_index];
 
 			Color c = {*pixel / 255.0f, *(pixel + 1) / 255.0f, *(pixel + 2) / 255.0f};
 			c = srgb_to_linear(c);
@@ -176,6 +176,7 @@ void convert_rgba_to_lineare(const unsigned char *input, const int image_width, 
 			output[image_index] = (unsigned char)roundf(c.r * 255.0f);	   // R
 			output[image_index + 1] = (unsigned char)roundf(c.g * 255.0f); // G
 			output[image_index + 2] = (unsigned char)roundf(c.b * 255.0f); // B
+			output[image_index + 3] = 255;
 		}
 	}
 }
@@ -262,7 +263,8 @@ Color get_picture_color(const unsigned char *image, int width, int height, int i
 	c.r = image[idx + 0] / 255.0f;
 	c.g = image[idx + 1] / 255.0f;
 	c.b = image[idx + 2] / 255.0f;
-	return c;
+
+	return  srgb_to_linear(c);
 }
 
 // Traduction de getLinearPixel
@@ -568,6 +570,23 @@ Couple find_two_most_frequent(const map *histo)
 	return result;
 }
 
+void pset_lineare(unsigned char *image, int x, int y, ColorPalette *palette, int color_index, int width, int height)
+{
+	if (x < 0 || y < 0 || x >= width || y >= height) {
+		return;
+	}
+	int index = (y * width + x) * COLOR_COMP;
+	ColorPalette color = palette[color_index];
+
+	Color c = {color.r / 255.0f, color.g / 255.0f, color.b/ 255.0f};
+	c = linear_to_srgb(c);
+	image[index] = c.r * 255.0f;		// R
+	image[index + 1] = c.g * 255.0f; // G
+	image[index + 2] = c.b * 255.0f; // B
+	image[index + 3] = 255;		// A
+
+}
+
 void pset(unsigned char *image, int x, int y, ColorPalette *palette, int color_index, int width, int height)
 {
 	if (x < 0 || y < 0 || x >= width || y >= height) {
@@ -575,11 +594,14 @@ void pset(unsigned char *image, int x, int y, ColorPalette *palette, int color_i
 	}
 	int index = (y * width + x) * COLOR_COMP;
 	ColorPalette color = palette[color_index];
+
 	image[index] = color.r;		// R
 	image[index + 1] = color.g; // G
 	image[index + 2] = color.b; // B
 	image[index + 3] = 255;		// A
+
 }
+
 
 void reduce_exoquant_palette_to_mo6(const unsigned char *input_palette, ColorPalette *output_palette, int input_size)
 {
@@ -607,7 +629,7 @@ void reduce_exoquant_palette_to_mo6(const unsigned char *input_palette, ColorPal
 		output_palette[i].r = thomson_full_palette[best_index].r;
 		output_palette[i].g = thomson_full_palette[best_index].g;
 		output_palette[i].b = thomson_full_palette[best_index].b;
-		output_palette[i].thomson_idx = i;
+		output_palette[i].thomson_idx = best_index;
 	}
 }
 

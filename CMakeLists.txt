@@ -31,7 +31,7 @@ target_include_directories(bayermo5 PRIVATE
     ${PROJECT_SOURCE_DIR}/Containers/src/include)
 target_link_libraries(bayermo5 container)
 
-add_executable(bayermo6 bayermo6.c useful.c thomson.c comparator.c tetrapal/tetrapal.c exoquant/exoquant.c)
+add_executable(bayermo6 bayermo6.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c exoquant/exoquant.c)
 target_include_directories(bayermo6 PRIVATE 
     ${PROJECT_SOURCE_DIR}/stb 
     ${PROJECT_SOURCE_DIR}/tetrapal
