@@ -6,7 +6,7 @@
 
 **Puis expérimentation de tramage ordonné avec une palette de 16 couleurs non regulièrement espacées.**
 
-Sans contraintes en rgb :
+Sans contraintes sur une palette de 4096 couleurs :
 
 <img src="result/output_tetra.png" width=320>
 
