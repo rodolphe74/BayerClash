@@ -153,7 +153,6 @@ int main(int argc, char *argv[])
 				sort_by_luminance(candidates, weights, float_mo6_palette);
 				const double threshold = bayer_matrix_8x8[y % 8][z % 8];
 				int image_index = y * width + z;
-				// const double threshold = bayer_matrix_8x8[y % 8][z % 8];
 				double sum = 0.0;
 				int c = 0;
 				for (int i = 0; i < 4; i++) {
