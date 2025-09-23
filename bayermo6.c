@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 
 	// Triangulation de la palette
 	Tetrapal *tetrapal = tetrapal_new(float_mo6_palette, PALETTE_SIZE);
-	unsigned char *output_tetra_indexed = malloc(width * height * sizeof(char));
+	// unsigned char *output_tetra_indexed = malloc(THOMSON_SCREEN_W * THOMSON_SCREEN_H * COLOR_COMP * sizeof(char));
 
 	for (int y = 0; y < THOMSON_SCREEN_H; y++) {
 
@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 					sum += weights[i];
 					if (threshold < sum) {
 						c  = candidates[i];
-						output_tetra_indexed[image_index] = candidates[i];
+						// output_tetra_indexed[image_index] = candidates[i];
 						break;
 					}
 				}
@@ -263,17 +263,17 @@ int main(int argc, char *argv[])
 	}
 
 	// version rgb
-	unsigned char tetra_palette[PALETTE_SIZE * 4];\
-	for (int i = 0; i < 16; i++) {
-		tetra_palette[i * 4] = mo6_palette[i].r;
-		tetra_palette[i * 4 + 1] = mo6_palette[i].g;
-		tetra_palette[i * 4 + 2] = mo6_palette[i].b; 
-		tetra_palette[i * 4 + 3] = 255;
-	}
-	unsigned char *output_tetra = malloc(THOMSON_SCREEN_W * THOMSON_SCREEN_H * COLOR_COMP);
-	convert_indexed_to_rgba(output_tetra_indexed, THOMSON_SCREEN_W, THOMSON_SCREEN_H, tetra_palette, PALETTE_SIZE, output_tetra);
-	stbi_write_png("output_tetra.png", THOMSON_SCREEN_W, THOMSON_SCREEN_H, COLOR_COMP, output_tetra, THOMSON_SCREEN_W * COLOR_COMP);
-	free(output_tetra);
+	// unsigned char tetra_palette[PALETTE_SIZE * 4];\
+	// for (int i = 0; i < 16; i++) {
+	// 	tetra_palette[i * 4] = mo6_palette[i].r;
+	// 	tetra_palette[i * 4 + 1] = mo6_palette[i].g;
+	// 	tetra_palette[i * 4 + 2] = mo6_palette[i].b; 
+	// 	tetra_palette[i * 4 + 3] = 255;
+	// }
+	// unsigned char *output_tetra = malloc(THOMSON_SCREEN_W * THOMSON_SCREEN_H * COLOR_COMP);
+	// convert_indexed_to_rgba(output_tetra_indexed, THOMSON_SCREEN_W, THOMSON_SCREEN_H, tetra_palette, PALETTE_SIZE, output_tetra);
+	// stbi_write_png("output_tetra.png", THOMSON_SCREEN_W, THOMSON_SCREEN_H, COLOR_COMP, output_tetra, THOMSON_SCREEN_W * COLOR_COMP);
+	// free(output_tetra);
 
 	// version clash thomson
 	stbi_write_png("output_mo6.png", THOMSON_SCREEN_W, THOMSON_SCREEN_H, COLOR_COMP, output_image,
@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
 	free(original_image);
 	free(lineare_image);
 	free(output_image);
-	free(output_tetra_indexed);
+	// free(output_tetra_indexed);
 
 	return 0;
 }
