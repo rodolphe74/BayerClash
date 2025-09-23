@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
 				pixel[2] = p.b;
 				tetrapal_interpolate(tetrapal, pixel, candidates, weights);
 				sort_by_luminance(candidates, weights, float_mo6_palette);
-				const double threshold = bayer_matrix_4x4_low[y % 4][z % 4];
+				const double threshold = bayer_matrix_4x4_low_2[y % 4][z % 4];
 				int image_index = y * width + z;
 				double sum = 0.0;
 				int c = 0;
