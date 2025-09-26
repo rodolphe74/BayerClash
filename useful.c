@@ -53,6 +53,14 @@ Color color_mul(Color a, float coef)
 	return result;
 }
 
+Color color_add_att(Color a, Color d, float factor) {
+    a.r += d.r * factor;
+    a.g += d.g * factor;
+    a.b += d.b * factor;
+	return a;
+}
+
+
 // Clamp d'une couleur complète
 Color color_clamp(Color c)
 {

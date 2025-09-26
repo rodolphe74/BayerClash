@@ -24,6 +24,7 @@ float clamp_deviation(float v);
 Color color_add(Color a, Color b);
 Color color_sub(Color a, Color b);
 Color color_mul(Color a, float coef);
+Color color_add_att(Color self, Color d, float factor);
 Color srgb_to_linear(Color pixel);
 Color linear_to_srgb(Color pixel);
 

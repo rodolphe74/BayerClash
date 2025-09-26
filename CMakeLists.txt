@@ -16,6 +16,19 @@ target_include_directories(container PUBLIC
     ${PROJECT_SOURCE_DIR}/containers/src/include
 )
 
+# wu quantizer old style C lib
+add_library(wu STATIC
+    ${PROJECT_SOURCE_DIR}/cq.c
+)
+target_compile_options(wu PRIVATE -Wno-old-style-definition)
+
+
+# kmean quantizer
+file(GLOB LIBIMAGEQUANT_SOURCES "${PROJECT_SOURCE_DIR}/libimagequant/*.c")
+add_library(imquant STATIC
+    ${LIBIMAGEQUANT_SOURCES}
+)
+
 
 add_executable(tetratest tetratest.c useful.c thomson.c comparator.c tetrapal/tetrapal.c exoquant/exoquant.c)
 target_include_directories(tetratest PRIVATE 
@@ -39,6 +52,14 @@ target_include_directories(bayermo6 PRIVATE
     ${PROJECT_SOURCE_DIR}/Containers/src/include)
 target_link_libraries(bayermo6 container)
 
+add_executable(bayermo62 bayermo62.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c exoquant/exoquant.c)
+target_include_directories(bayermo62 PRIVATE 
+    ${PROJECT_SOURCE_DIR}/stb 
+    ${PROJECT_SOURCE_DIR}/tetrapal
+    ${PROJECT_SOURCE_DIR}/exoquant
+    ${PROJECT_SOURCE_DIR}/Containers/src/include
+    ${PROJECT_SOURCE_DIR}/libimagequant)
+target_link_libraries(bayermo62 container imquant)
 
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
