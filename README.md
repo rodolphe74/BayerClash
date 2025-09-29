@@ -14,7 +14,7 @@ Avec les contraintes MO6 de 2 couleurs max par bloc horizontal de 8 pixels sur u
 
 <img src="result/output_mo6.png" width=320>
 
-Avec une matrice [blue noise](https://github.com/matejlou/SimpleBlueNoise)
+Avec une matrice [blue noise](https://github.com/matejlou/SimpleBlueNoise) :
 
 <img src="result/output_mo6_bn.png" width=320>
 
