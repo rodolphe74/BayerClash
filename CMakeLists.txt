@@ -28,7 +28,7 @@ file(GLOB LIBIMAGEQUANT_SOURCES "${PROJECT_SOURCE_DIR}/libimagequant/*.c")
 add_library(imquant STATIC
     ${LIBIMAGEQUANT_SOURCES}
 )
-
+target_compile_options(imquant PRIVATE -Wno-attributes)
 
 add_executable(tetratest tetratest.c useful.c thomson.c comparator.c tetrapal/tetrapal.c exoquant/exoquant.c)
 target_include_directories(tetratest PRIVATE 
@@ -61,6 +61,23 @@ target_include_directories(bayermo62 PRIVATE
     ${PROJECT_SOURCE_DIR}/libimagequant)
 target_link_libraries(bayermo62 container imquant)
 
+add_executable(bayermo63 bayermo63.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c)
+target_include_directories(bayermo63 PRIVATE 
+    ${PROJECT_SOURCE_DIR}/stb 
+    ${PROJECT_SOURCE_DIR}/tetrapal
+    ${PROJECT_SOURCE_DIR}/Containers/src/include
+    ${PROJECT_SOURCE_DIR}/libimagequant
+    ${PROJECT_SOURCE_DIR}/SimpleBlueNoise)
+target_link_libraries(bayermo63 container imquant)
+
+add_executable(bayermo635 bayermo635.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c)
+target_include_directories(bayermo635 PRIVATE 
+    ${PROJECT_SOURCE_DIR}/stb 
+    ${PROJECT_SOURCE_DIR}/tetrapal
+    ${PROJECT_SOURCE_DIR}/libimagequant
+    ${PROJECT_SOURCE_DIR}/Containers/src/include
+    ${PROJECT_SOURCE_DIR}/SimpleBlueNoise)
+target_link_libraries(bayermo635 container imquant)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 target_link_libraries(tetratest)
