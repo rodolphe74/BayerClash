@@ -1,5 +1,4 @@
 #include "useful.h"
-#include "matrix.h"
 #include "thomson.h"
 #include "comparator.h"
 #include <stdio.h>
@@ -10,9 +9,22 @@
 #include <map.h>
 #include <list.h>
 #include <float.h>
+#define BLUE_NOISE_GENERATOR_IMPLEMENTATION
+#include <blue_noise_generator.h>
 
 #define COEF 0.6f
 
+// int string_cmp(const void *a, const void *b)
+// {
+// 	return strcmp(*(const char **)a, *(const char **)b);
+// }
+
+// int int_cmp(const void *a, const void *b)
+// {
+// 	int ia = *(const int *)a;
+// 	int ib = *(const int *)b;
+// 	return (ia > ib) - (ia < ib); // Retourne 1, 0 ou -1
+// }
 
 int get_or_default(map histo, int key, int default_value)
 {
@@ -51,6 +63,16 @@ int main(int argc, char *argv[])
 	int q[8];
 	map histo = map_init(sizeof(int), sizeof(int), int_cmp);
 
+	// matrice blue noise
+	unsigned int buffer[4096];
+	double matrix[64][64];
+	blue_noise_generator_create_void_and_cluster(buffer, 64, 64);
+	for (int y = 0; y < 64; y++) {
+		for (int x = 0; x < 64; x++) {
+			matrix[y][x] = buffer[y * 64 + x] / 4096.0;
+		}
+	}
+
 	// initialisation des palettes lineaires
 	ColorPalette mo5_lineare_palette[16] = {};
 	float float_mo5_palette[PALETTE_SIZE * 3];
@@ -66,7 +88,6 @@ int main(int argc, char *argv[])
 		float_mo5_palette[i * 3 + 2] = mo5_lineare_palette[i].b / 255.0f;
 	}
 
-
 	for (int y = 0; y < 200; y++) {
 
 		// Décalage des lignes d'erreurs
@@ -80,7 +101,7 @@ int main(int argc, char *argv[])
 			map_clear(histo);
 			int i = 0;
 			for (int z = x; z <= x + 7; z++) {
-				float d = bayer_matrix_8x8[y % 8][z % 8];
+				float d = matrix[y % 64][z % 64];
 				Color p = color_add(get_average_pixel(original_image, width, height, z, y), err1[z + 1]);
 				int c = ((p.r > d) ? 1 : 0) + ((p.g > d) ? 2 : 0) + ((p.b > d) ? 4 : 0);
 				int val = get_or_default(histo, c, 0);
