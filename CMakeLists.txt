@@ -44,12 +44,28 @@ target_include_directories(bayermo5 PRIVATE
     ${PROJECT_SOURCE_DIR}/Containers/src/include)
 target_link_libraries(bayermo5 container)
 
-add_executable(bayermo52 bayermo52.c useful.c thomson.c comparator.c)
+add_executable(bayermo52 bayermo52.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c)
 target_include_directories(bayermo52 PRIVATE 
     ${PROJECT_SOURCE_DIR}/stb 
+    ${PROJECT_SOURCE_DIR}/tetrapal
     ${PROJECT_SOURCE_DIR}/Containers/src/include
     ${PROJECT_SOURCE_DIR}/SimpleBlueNoise)
 target_link_libraries(bayermo52 container)
+
+add_executable(bayermo53 bayermo53.c useful.c thomson.c comparator.c)
+target_include_directories(bayermo53 PRIVATE 
+    ${PROJECT_SOURCE_DIR}/stb 
+    ${PROJECT_SOURCE_DIR}/Containers/src/include
+    ${PROJECT_SOURCE_DIR}/SimpleBlueNoise)
+target_link_libraries(bayermo53 container)
+
+add_executable(bayermo54 bayermo54.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c)
+target_include_directories(bayermo54 PRIVATE 
+    ${PROJECT_SOURCE_DIR}/stb 
+    ${PROJECT_SOURCE_DIR}/tetrapal
+    ${PROJECT_SOURCE_DIR}/Containers/src/include
+    ${PROJECT_SOURCE_DIR}/SimpleBlueNoise)
+target_link_libraries(bayermo54 container)
 
 add_executable(bayermo6 bayermo6.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c exoquant/exoquant.c)
 target_include_directories(bayermo6 PRIVATE 

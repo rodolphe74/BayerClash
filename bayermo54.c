@@ -2,7 +2,6 @@
 #include "thomson.h"
 #include "k7.h"
 #include "comparator.h"
-#include "matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +11,8 @@
 #include <list.h>
 #include <float.h>
 #include <tetrapal.h>
-
+#define BLUE_NOISE_GENERATOR_IMPLEMENTATION
+#include <blue_noise_generator.h>
 
 #define COEF 0.6f
 
@@ -93,6 +93,16 @@ int main(int argc, char *argv[])
 	float float_palette[PALETTE_SIZE * 3];
 	float float_mo5_palette[PALETTE_SIZE * 3];
 
+	// matrice blue noise
+	unsigned int buffer[4096];
+	double matrix[64][64];
+	blue_noise_generator_create_void_and_cluster(buffer, 64, 64);
+	for (int y = 0; y < 64; y++) {
+		for (int x = 0; x < 64; x++) {
+			matrix[y][x] = buffer[y * 64 + x] / 4096.0;
+		}
+	}
+
 	// initialisation des palettes lineaires
 	ColorPalette mo5_lineare_palette[16] = {};
 	for (int i = 0; i < PALETTE_SIZE; i++) {
@@ -130,7 +140,7 @@ int main(int argc, char *argv[])
 				pixel[2] = p.b;
 				tetrapal_interpolate(tetrapal, pixel, candidates, weights);
 				sort_by_luminance(candidates, weights, float_mo5_palette);
-				const double threshold = bayer_matrix_4x4[y % 4][z % 4];
+				const double threshold = matrix[y % 64][z % 64];
 				int image_index = y * width + z;
 				double sum = 0.0;
 				int c = 0;
