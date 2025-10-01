@@ -6,7 +6,7 @@
 
 **Expérimentation de tramage ordonné avec une palette de 16 couleurs non regulièrement espacées.**
 
-Palette MO5 complète :
+Avec les contraintes MO5 de 2 couleurs max par bloc horizontal de 8 pixels sur une palette de 16 couleurs:
 
 Avec une matrice 8x8 standard :
 
