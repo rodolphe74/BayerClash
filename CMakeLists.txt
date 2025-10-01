@@ -102,6 +102,15 @@ target_include_directories(bayermo635 PRIVATE
     ${PROJECT_SOURCE_DIR}/SimpleBlueNoise)
 target_link_libraries(bayermo635 container imquant)
 
+add_executable(bayermo64 bayermo64.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c exoquant/exoquant.c)
+target_include_directories(bayermo64 PRIVATE 
+    ${PROJECT_SOURCE_DIR}/stb 
+    ${PROJECT_SOURCE_DIR}/tetrapal
+    ${PROJECT_SOURCE_DIR}/exoquant
+    ${PROJECT_SOURCE_DIR}/Containers/src/include
+    ${PROJECT_SOURCE_DIR}/libimagequant)
+target_link_libraries(bayermo64 container imquant)
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 target_link_libraries(tetratest)
 else()
