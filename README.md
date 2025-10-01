@@ -8,15 +8,18 @@
 
 Palette MO5 complète :
 
+Avec une matrice 8x8 standard :
+
 <img src="result/output_mo5_t.png" width=320>
+
+Avec une matrice [blue noise](https://github.com/matejlou/SimpleBlueNoise) :
 
 <img src="result/output_mo5_t2.png" width=320>
 
-Sans contraintes sur une palette de 4096 couleurs :
-
-<img src="result/output_tetra.png" width=320>
 
 Avec les contraintes MO6 de 2 couleurs max par bloc horizontal de 8 pixels sur une palette de 4096 couleurs:
+
+Avec une matrice 8x8 standard :
 
 <img src="result/output_mo6.png" width=320>
 
