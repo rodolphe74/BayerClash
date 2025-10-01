@@ -4,7 +4,13 @@
 
 <img src="result/original.png" width=320>&nbsp;<img src="result/output_mo5.png" width=320>
 
-**Puis expérimentation de tramage ordonné avec une palette de 16 couleurs non regulièrement espacées.**
+**Expérimentation de tramage ordonné avec une palette de 16 couleurs non regulièrement espacées.**
+
+Palette MO5 complète :
+
+<img src="result/output_mo5_t.png" width=320>
+
+<img src="result/output_mo5_t2.png" width=320>
 
 Sans contraintes sur une palette de 4096 couleurs :
 
