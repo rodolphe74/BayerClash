@@ -44,6 +44,14 @@ double blue_noise_8x8[8][8] = {
     {1.000000, 0.500000, 0.875000, 0.375000, 0.968750, 0.468750, 0.843750, 0.343750}
 };
 
+// r sequence
+// https://matejlou.blog/2023/12/06/ordered-dithering-for-arbitrary-or-irregular-palettes/
+float r_sequence(int x, int y)
+{
+    float value = fmodf(0.7548776662f * (float)x + 0.56984029f * (float)y, 1.0f);
+    return value < 0.5f ? 2.0f * value : 2.0f - 2.0f * value;
+}
+
 
 
 // Matrice en rotation
