@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
 				pixel[2] = p.b;
 				tetrapal_interpolate(tetrapal, pixel, candidates, weights);
 				sort_by_luminance(candidates, weights, float_mo6_palette);
-				const double threshold = r.matrix[r.size[0] * y + z] / 15.0;
+				const double threshold = (r.matrix[r.size[0] * y + z] + 0.5) / 16.0;
 				int image_index = y * width + z;
 				double sum = 0.0;
 				int c = 0;
