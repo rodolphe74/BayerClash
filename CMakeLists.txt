@@ -67,12 +67,12 @@ target_include_directories(bayermo54 PRIVATE
     ${PROJECT_SOURCE_DIR}/SimpleBlueNoise)
 target_link_libraries(bayermo54 container)
 
-add_executable(bayermo55 bayermo55.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c)
-target_include_directories(bayermo55 PRIVATE 
+add_executable(bayermo56 bayermo56.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c)
+target_include_directories(bayermo56 PRIVATE 
     ${PROJECT_SOURCE_DIR}/stb 
     ${PROJECT_SOURCE_DIR}/tetrapal
     ${PROJECT_SOURCE_DIR}/Containers/src/include)
-target_link_libraries(bayermo55 container)
+target_link_libraries(bayermo56 container)
 
 
 add_executable(bayermo6 bayermo6.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c exoquant/exoquant.c)
