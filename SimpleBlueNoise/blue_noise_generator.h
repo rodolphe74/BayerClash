@@ -59,7 +59,7 @@ BLUE_NOISE_GENERATOR_LINKAGE void blue_noise_generator_set_seed(unsigned int see
 #endif
 
 #ifndef BLUE_NOISE_GENERATOR_INTERNAL_MALLOC
-    #include <malloc.h> /* malloc, free */
+    // #include <malloc.h> /* malloc, free */
     #define BLUE_NOISE_GENERATOR_INTERNAL_MALLOC(size) malloc(size)
     #define BLUE_NOISE_GENERATOR_INTERNAL_FREE(ptr) free(ptr)
 #endif

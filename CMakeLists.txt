@@ -120,6 +120,16 @@ target_include_directories(bayermo64 PRIVATE
     ${PROJECT_SOURCE_DIR}/libimagequant)
 target_link_libraries(bayermo64 container imquant)
 
+
+add_executable(bayermo65 bayermo65.c useful.c thomson.c k7.c comparator.c tetrapal/tetrapal.c)
+target_include_directories(bayermo65 PRIVATE 
+    ${PROJECT_SOURCE_DIR}/stb 
+    ${PROJECT_SOURCE_DIR}/tetrapal
+    ${PROJECT_SOURCE_DIR}/libimagequant
+    ${PROJECT_SOURCE_DIR}/Containers/src/include)
+target_link_libraries(bayermo65 container imquant)
+
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 target_link_libraries(tetratest)
 else()
