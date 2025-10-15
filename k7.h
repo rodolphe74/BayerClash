@@ -4,6 +4,6 @@
 #include <memory.h>
 #include <stdio.h>
 
-void ajouterFichier(FILE *k7, char *filename);
+void ajouter_fichier(FILE *k7, char *filename);
 
 #endif

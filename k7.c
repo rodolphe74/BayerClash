@@ -42,7 +42,7 @@ void ecrireBloc(FILE *k7, const char typeBloc, const char data[], int len)
 	fwrite(&chksum, 1, 1, k7);
 }
 
-void ajouterFichier(FILE *k7, char *filename)
+void ajouter_fichier(FILE *k7, char *filename)
 {
 	FILE *f = fopen(filename, "rb");
 	if (f == NULL) {

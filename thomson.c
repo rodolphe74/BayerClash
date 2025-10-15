@@ -3,6 +3,7 @@
 #include <list.h>
 #include <math.h>
 #include <string.h>
+#include <float.h>
 
 ColorPalette red_255[16] = {{0, 0, 0, 0},	 {96, 0, 0, 1},	  {122, 0, 0, 2},  {142, 0, 0, 3},
 							{158, 0, 0, 4},	 {170, 0, 0, 5},  {183, 0, 0, 6},  {193, 0, 0, 7},
@@ -51,13 +52,41 @@ void init_mo5_palette()
 {
     for (int i = 0; i < 16; i++) {
         mo5_palette[i] = thomson_full_palette[mo5_palette_indexes[i]];
-		mo5_palette[i].thomson_idx = i;
+		mo5_palette[i].thomson_idx = mo5_palette_indexes[i];
     }
 }
 
 
 
-
+void reduce_palette_to_mo6_color_space(const ColorPalette *input_palette, ColorPalette *output_palette, int input_size)
+{
+	for (int i = 0; i < input_size; i++) {
+		// ColorPalette mo6_color = output_palette[i];
+		int best_index = 0;
+		double best_distance = DBL_MAX;
+		unsigned char r = input_palette[i].r;
+		unsigned char g = input_palette[i].g;
+		unsigned char b = input_palette[i].b;
+		for (int j = 0; j < 4096; j++) {
+			unsigned char dr = thomson_full_palette[j].r;
+			unsigned char dg = thomson_full_palette[j].g;
+			unsigned char db = thomson_full_palette[j].b;
+			int drc = r - dr;
+			int dgc = g - dg;
+			int dbc = b - db;
+			// distance perceptuelle
+			double distance = 0.299 * drc * drc + 0.587 * dgc * dgc + 0.114 * dbc * dbc;
+			if (distance < best_distance) {
+				best_distance = distance;
+				best_index = j;
+			}
+		}
+		output_palette[i].r = thomson_full_palette[best_index].r;
+		output_palette[i].g = thomson_full_palette[best_index].g;
+		output_palette[i].b = thomson_full_palette[best_index].b;
+		output_palette[i].thomson_idx = best_index;
+	}
+}
 
 
 
@@ -90,8 +119,6 @@ void free_vector(IntVector *vec)
 	vec->data = NULL;
 	vec->size = vec->capacity = 0;
 }
-
-
 
 void transpose_data_map_40(int columns, int lines, IntVector *src, IntVector *target)
 {
