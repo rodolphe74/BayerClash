@@ -6,6 +6,6 @@ Sur MO6, recherche d'une palette de 16 couleurs optimale sur 4096.
 
 <div align="center">
   <table>
-    <tr><td><img src="samples/mini320.png" width=338></td><td><img src="results/palette_mo6.png"></td><td><img src="results/mini.png"></td></tr>
+    <tr><td><img src="samples/mini320.png"></td><td><img src="results/palette_mo6.png"></td><td><img src="results/mini.png" width=338></td></tr>
   </table>
 </div>
