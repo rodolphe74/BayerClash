@@ -4,3 +4,9 @@ Trammage ordonné avec une palette de 16 couleurs non régulièrement espacées 
 <div align="center">
 <table style="border-collapse: collapse; border: none;"> <tr><td><img src="results/palette_mo6.png"></td><td><img src="results/mini.png"></td></tr></table>
 </div>
+
+<div align="center">
+  <table>
+    <tr><td><img src="results/palette_mo6.png"></td><td><img src="results/mini.png"></td></tr>
+  </table>
+</div>
