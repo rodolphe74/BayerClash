@@ -41,6 +41,5 @@ Plusieurs modes sont disponibles (bayermo.c):
 - [GrafX2](https://grafx2.gitlab.io/grafX2)
 - [libimagequant](https://pngquant.org/lib/)
 - [tetrapal](https://github.com/matejlou/tetrapal)
-- [exoquant](https://github.com/exoticorn/exoquant)
 - [C containers](https://github.com/bkthomps/Containers)
 - [stb](https://github.com/nothings/stb)
