@@ -37,7 +37,10 @@ Plusieurs modes sont disponibles (bayermo.c):
 <img src="samples/original.png">
 
 ## M05 / BLUE NOISE
-<img src="results/output_mo5_bn.png">
+| KNOLL | TETRAPAL |
+|---|---|
+| <img src="results/output_mo5_bn.png"> | <img src="results/output_mo5_bn.png"> |
+
 
 ## M06 / BLUE NOISE
 <img src="results/output_mo6_bn.png">
