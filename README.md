@@ -49,7 +49,11 @@ Plusieurs modes sont disponibles (bayermo.c):
 <img src="results/output_mo6_b4.png">
 
 ## M05 / BAYER4_LOW
+<img src="results/output_mo5_b4l.png">
+
 ## M06 / BAYER4_LOW
+<img src="results/output_mo6_b4l.png">
+
 ## M05 / BAYER8
 ## M06 / BAYER8
 ## M05 / R_SEQUENCE
