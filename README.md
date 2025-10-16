@@ -10,7 +10,7 @@ Sur MO6, recherche d'une palette de 16 couleurs optimale sur 4096.
   </table>
 </div>
 
-Plusieurs modes sont disponibles :
+Plusieurs modes sont disponibles (bayermo.c):
 
 ```C
 // Choix de la machine
