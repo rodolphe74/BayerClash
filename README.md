@@ -45,12 +45,12 @@ Plusieurs modes sont disponibles (bayermo.c):
 ## M06 / BLUE NOISE
 | KNOLL | TETRAPAL |
 |---|---|
-| <img src="results/output_mo6_bn.png"> | |
+| <img src="results/output_mo6_bn.png"> | <img src="results/output_mo6_bn_t.png"> |
 
 ## M05 / BAYER4
 | KNOLL | TETRAPAL |
 |---|---|
-| <img src="results/output_mo5_b4.png"> | |
+| <img src="results/output_mo5_b4.png"> | <img src="results/output_mo5_b4_t.png"> |
 
 ## M06 / BAYER4
 <img src="results/output_mo6_b4.png">
