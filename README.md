@@ -61,7 +61,10 @@ Plusieurs modes sont disponibles (bayermo.c):
 <img src="results/output_mo6_b8.png">
 
 ## M05 / R_SEQUENCE
+<img src="results/output_mo5_r.png">
+
 ## M06 / R_SEQUENCE
+<img src="results/output_mo6_r.png">
 
 
 # Liens
