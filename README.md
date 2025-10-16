@@ -34,6 +34,18 @@ Plusieurs modes sont disponibles (bayermo.c):
 
 # Exemples
 
+<img src="samples/mini320.png">
+
+## M05 / BLUE NOISE
+## M06 / BLUE NOISE
+## M05 / BAYER4
+## M06 / BAYER4
+## M05 / BAYER4_LOW
+## M06 / BAYER4_LOW
+## M05 / BAYER8
+## M06 / BAYER8
+## M05 / R_SEQUENCE
+## M06 / R_SEQUENCE
 
 
 # Liens
