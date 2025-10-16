@@ -20,16 +20,16 @@ Plusieurs modes sont disponibles (bayermo.c):
 // Choix du dithering
 // #define BLUE_NOISE
 // #define BAYER_4
-// #define BAYER_4_LOW
-#define BAYER_8
+#define BAYER_4_LOW
+// #define BAYER_8
 // #define R_SEQUENCE
 
 // Choix de l'algorithme 
 // (KNOLL est plus adapté au color clash)
-// #define TETRAPAL
-// #define N_CANDIDATES 4
-#define KNOLL
-#define N_CANDIDATES 32
+#define TETRAPAL
+#define N_CANDIDATES 4
+// #define KNOLL
+// #define N_CANDIDATES 32
 ```
 
 # Exemples
@@ -55,7 +55,11 @@ Plusieurs modes sont disponibles (bayermo.c):
 <img src="results/output_mo6_b4l.png">
 
 ## M05 / BAYER8
+<img src="results/output_mo5_b8.png">
+
 ## M06 / BAYER8
+<img src="results/output_mo6_b8.png">
+
 ## M05 / R_SEQUENCE
 ## M06 / R_SEQUENCE
 
