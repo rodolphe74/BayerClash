@@ -14,13 +14,13 @@ Plusieurs modes sont disponibles (bayermo.c):
 
 ```C
 // Choix de la machine
-// #define MO5
-#define MO6
+#define MO5
+// #define MO6
 
 // Choix du dithering
-// #define BLUE_NOISE
+#define BLUE_NOISE
 // #define BAYER_4
-#define BAYER_4_LOW
+// #define BAYER_4_LOW
 // #define BAYER_8
 // #define R_SEQUENCE
 
@@ -39,14 +39,18 @@ Plusieurs modes sont disponibles (bayermo.c):
 ## M05 / BLUE NOISE
 | KNOLL | TETRAPAL |
 |---|---|
-| <img src="results/output_mo5_bn.png"> | <img src="results/output_mo5_bn.png"> |
+| <img src="results/output_mo5_bn.png"> | <img src="results/output_mo5_bn_t.png"> |
 
 
 ## M06 / BLUE NOISE
-<img src="results/output_mo6_bn.png">
+| KNOLL | TETRAPAL |
+|---|---|
+| <img src="results/output_mo6_bn.png"> | |
 
 ## M05 / BAYER4
-<img src="results/output_mo5_b4.png">
+| KNOLL | TETRAPAL |
+|---|---|
+| <img src="results/output_mo5_b4.png"> | |
 
 ## M06 / BAYER4
 <img src="results/output_mo6_b4.png">

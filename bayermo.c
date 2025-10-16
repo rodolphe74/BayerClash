@@ -1,13 +1,13 @@
 // Choix de la machine
-// #define MO5
-#define MO6
+#define MO5
+// #define MO6
 
 // Choix du dithering
-// #define BLUE_NOISE
+#define BLUE_NOISE
 // #define BAYER_4
 // #define BAYER_4_LOW
 // #define BAYER_8
-#define R_SEQUENCE
+// #define R_SEQUENCE
 
 // Choix de l'algorithme
 #define TETRAPAL
