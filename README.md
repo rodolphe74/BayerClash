@@ -34,7 +34,7 @@ Plusieurs modes sont disponibles (bayermo.c):
 
 # Exemples
 
-<img src="samples/mini320.png">
+<img src="samples/original.png">
 
 ## M05 / BLUE NOISE
 <img src="results/output_mo5_bn.png">
