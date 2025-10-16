@@ -37,7 +37,11 @@ Plusieurs modes sont disponibles (bayermo.c):
 <img src="samples/mini320.png">
 
 ## M05 / BLUE NOISE
+<img src="results/output_mo5_bn.png">
+
 ## M06 / BLUE NOISE
+<img src="results/output_mo6_bn.png">
+
 ## M05 / BAYER4
 ## M06 / BAYER4
 ## M05 / BAYER4_LOW
