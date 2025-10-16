@@ -10,6 +10,31 @@ Sur MO6, recherche d'une palette de 16 couleurs optimale sur 4096.
   </table>
 </div>
 
+Plusieurs modes sont disponibles :
+
+```C
+// Choix de la machine
+// #define MO5
+#define MO6
+
+// Choix du dithering
+// #define BLUE_NOISE
+// #define BAYER_4
+// #define BAYER_4_LOW
+#define BAYER_8
+// #define R_SEQUENCE
+
+// Choix de l'algorithme 
+// (KNOLL est plus adapté au color clash)
+// #define TETRAPAL
+// #define N_CANDIDATES 4
+#define KNOLL
+#define N_CANDIDATES 32
+```
+
+# Exemples
+
+
 
 # Liens
 - [UToPic](https://github.com/Samuel-DEVULDER/UToPiC)
