@@ -1,6 +1,6 @@
 // Choix de la machine
-// #define MO5
-#define MO6
+#define MO5
+// #define MO6
 
 // Choix du dithering
 // #define BLUE_NOISE
