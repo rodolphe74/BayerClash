@@ -59,7 +59,9 @@ Plusieurs modes sont disponibles (bayermo.c):
 
 
 ## M05 / BAYER4_LOW
-<img src="results/output_mo5_b4l.png">
+| KNOLL | TETRAPAL |
+|---|---|
+| <img src="results/output_mo5_b4l.png"> | <img src="results/output_mo6_b4l_t.png |
 
 ## M06 / BAYER4_LOW
 <img src="results/output_mo6_b4l.png">
