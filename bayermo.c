@@ -6,8 +6,8 @@
 // #define BLUE_NOISE
 // #define BAYER_4
 // #define BAYER_4_LOW
-#define BAYER_8
-// #define R_SEQUENCE
+// #define BAYER_8
+#define R_SEQUENCE
 
 // Choix de l'algorithme
 // #define TETRAPAL
