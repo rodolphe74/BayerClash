@@ -29,5 +29,11 @@ target_include_directories(bayermo PRIVATE
     ${PROJECT_SOURCE_DIR}/libimagequant
     ${PROJECT_SOURCE_DIR}/Containers/src/include
     ${PROJECT_SOURCE_DIR}/SimpleBlueNoise)
-target_link_libraries(bayermo container imquant)
 
+    # Lien avec les bibliothèques principales
+target_link_libraries(bayermo PRIVATE container imquant)
+
+# Ajout conditionnel de libm sous Linux
+if(UNIX AND NOT APPLE)
+    target_link_libraries(bayermo PRIVATE m)
+endif()

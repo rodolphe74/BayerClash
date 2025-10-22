@@ -5,15 +5,15 @@
 // Choix du dithering
 // #define BLUE_NOISE
 // #define BAYER_4
-#define BAYER_4_LOW
-// #define BAYER_8
+// #define BAYER_4_LOW
+#define BAYER_8
 // #define R_SEQUENCE
 
 // Choix de l'algorithme
-#define TETRAPAL
-#define N_CANDIDATES 4
-// #define KNOLL
-// #define N_CANDIDATES 32
+// #define TETRAPAL
+// #define N_CANDIDATES 4
+#define KNOLL
+#define N_CANDIDATES 32
 
 
 #define ERROR_FACTOR 0.8
