@@ -68,7 +68,9 @@ Plusieurs modes sont disponibles (bayermo.c):
 | <img src="results/output_mo6_b4l.png"> | <img src="results/output_mo6_b4l_t.png"> |
 
 ## M05 / BAYER8
-<img src="results/output_mo5_b8.png">
+| KNOLL | TETRAPAL |
+|---|---|
+| <img src="results/output_mo5_b8.png"> | <img src="results/output_mo5_b8_t.png"> |
 
 ## M06 / BAYER8
 <img src="results/output_mo6_b8.png">
