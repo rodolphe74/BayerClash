@@ -23,7 +23,6 @@
 #include "image.h"
 #include "thomson.h"
 #include "k7.h"
-#include "gx2reduce.h"
 #include "comparator.h"
 #include "matrix.h"
 #include <stdio.h>
@@ -220,8 +219,17 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef TETRAPAL
+                Color p_clamped = color_clamp(p);
+                memset(tetra_weights, 0, sizeof(tetra_weights));
+                memset(tetra_candidates, 0, sizeof(tetra_candidates));
 				float pixel[3] = {p.r, p.g, p.b};
-				tetrapal_interpolate(tetrapal, pixel, tetra_candidates, tetra_weights);
+				int n = tetrapal_interpolate(tetrapal, pixel, tetra_candidates, tetra_weights);
+
+                if (n <= 0) {
+                    // fallback: plus proche voisin
+                    tetra_candidates[0] = tetrapal_nearest_neighbour(tetrapal, pixel);
+                    tetra_weights[0] = 1.0f;
+                }
 
 				sort_by_luminance(tetra_candidates, tetra_weights, palette_tetra);
 				for (int i = 0; i < N_CANDIDATES; i++) {
@@ -262,9 +270,10 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef TETRAPAL
+                // valeur par defaut: dernier candidat (somme cumulee des poids)
 				double sum = 0.0;
 				int c_idx = 0;
-				Candidate c;
+				Candidate c = candidates[N_CANDIDATES - 1];
 				for (int i = 0; i < N_CANDIDATES; i++) {
 					sum += candidates[i].w;
 					if (threshold < sum) {

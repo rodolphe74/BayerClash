@@ -225,6 +225,7 @@ void find_palette(const unsigned char *image, int width, int height, ColorPalett
 #define P256 256
 #define P256_4 1024
 	unsigned char palette_256[P256_4];
+    memset(palette_256, 0, sizeof(palette_256));
 	quantize(image, width, height, COLOR_COMP, palette_256, P256);
 	float f256[P256 * 3];
 	memset(f256, 0, P256 * 3 * sizeof(float));

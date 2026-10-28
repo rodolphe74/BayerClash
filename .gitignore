@@ -5,3 +5,4 @@ build/
 .cache/
 xcode/
 .vscode/
+compile_commands.json

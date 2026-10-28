@@ -231,6 +231,7 @@ int find_palette_index(int r, int g, int b, ColorPalette palette[PALETTE_SIZE])
 	for (int i = 0; i < PALETTE_SIZE; i++)
 		if (r == palette[i].r && g == palette[i].g && b == palette[i].b) return i;
 
+    fprintf(stderr, "couleur absente de la palette: %d,%d,%d\n", r, g, b);
 	return 0; // ?
 }
 
